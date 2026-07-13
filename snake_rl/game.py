@@ -92,28 +92,53 @@ class SnakeGame:
 
     def play_step(self):
 
-        for event in pygame.event.get():
+      for event in pygame.event.get():
 
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                quit()
+         if event.type == pygame.QUIT:
+            pygame.quit()
+            quit()
 
-        self._move(self.direction)
+        # Keyboard controls
+         if event.type == pygame.KEYDOWN:
 
-        self.snake.insert(0, self.head)
+            if event.key == pygame.K_LEFT:
+                self.direction = Direction.LEFT
 
-        if self.head == self.food:
+            elif event.key == pygame.K_RIGHT:
+                self.direction = Direction.RIGHT
 
-            self.score += 1
+            elif event.key == pygame.K_UP:
+                self.direction = Direction.UP
 
-            self._place_food()
+            elif event.key == pygame.K_DOWN:
+                self.direction = Direction.DOWN
 
-        else:
-            self.snake.pop()
+      self._move(self.direction)
+
+      self.snake.insert(0, self.head)
+
+      # Collision
+      if self.is_collision():
+
+        print("Game Over!")
+        return True, self.score
+
+    # Food
+      if self.head == self.food:
+
+        self.score += 1
+
+        self._place_food()
+
+      else:
+
+        self.snake.pop()
 
         self._update_ui()
 
         self.clock.tick(SPEED)
+
+      return False, self.score
 
     def _update_ui(self):
 
@@ -179,4 +204,11 @@ if __name__ == "__main__":
     game = SnakeGame()
 
     while True:
-        game.play_step()
+
+       game_over, score = game.play_step()
+
+       if game_over:
+
+        print("Final Score:", score)
+
+        break
