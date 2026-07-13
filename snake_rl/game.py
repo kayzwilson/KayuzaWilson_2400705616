@@ -113,7 +113,7 @@ class SnakeGame:
         reward = -10
         game_over = True
 
-      return reward, game_over, self.score
+        return reward, game_over, self.score
 
       #food
       if self.head == self.food:
